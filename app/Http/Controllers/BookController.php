@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BookRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 
@@ -35,16 +36,8 @@ class BookController extends Controller
     }
 
     // 3. Handle the form submission (Server Action equivalent)
-    public function store(Request $request)
+    public function store(BookRequest $request)
     {
-        // Validate incoming data
-        $request->validate([
-            'title' => 'required|string',
-            'author' => 'required|string',
-            'blurb' => 'required|string',
-            'rating' => 'required|integer|min:1|max:5',
-        ]);
-
         $title = $request->input('title');
         $id = now()->timestamp; // Clean integer timestamp
 
@@ -57,7 +50,7 @@ class BookController extends Controller
         }
 
         // Save the full book details into a Redis Hash
-        Redis::hset("books:$title", [
+        Redis::hmset("books:$title", [
             'title' => $title,
             'author' => $request->input('author'),
             'blurb' => $request->input('blurb'),
