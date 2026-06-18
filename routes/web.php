@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BookController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +17,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Homepage - View all books
+Route::get('/', [BookController::class, 'index'])->name('books.index');
+
+// Show the creation form
+Route::get('/create', [BookController::class, 'create'])->name('books.create');
+
+// Handle form submission
+Route::post('/create', [BookController::class, 'store'])->name('books.store');
